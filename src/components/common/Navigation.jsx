@@ -4,6 +4,7 @@ import { GoHome, GoRepo, GoOrganization, GoPulse, GoPlug } from 'react-icons/lib
 
 export default () => (
   <ul className='nav-links'>
+    <li>产品技术部接口管理系统</li>
     <li><NavLink exact to='/' activeClassName='selected'><GoHome /> 首页</NavLink></li>
     <li><NavLink to='/repository' activeClassName='selected'><GoRepo /> 仓库</NavLink></li>
     <li><NavLink to='/organization' activeClassName='selected'><GoOrganization /> 团队</NavLink></li>

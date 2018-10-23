@@ -1,4 +1,4 @@
-@import "../../assets/variables.sass";
+@import "../../assets/variables.sass"
 
 .RepositoryEditor
   > .header
@@ -56,7 +56,7 @@
         .highlight
           font-weight: bold;
           color: $brand;
-      
+
       &:active
         color: #FFF;
         > .label
@@ -299,16 +299,19 @@
         width: 4.5rem;
         min-width: 4.5rem;
       &.name
-        width: 20rem;
-        flex-grow: 3;
+        width: 18rem;
+        flex-grow: 1;
       &.type
-        width: 7rem;
+        width: 1rem;
       &.rule
         width: 10rem;
       &.value
-        width: 10rem;
-      &.desc
         width: 15rem;
+        flex-grow: 2;
+      &.desc
+        width: 45rem;
+        font-size: 1.3rem;
+        flex-grow: 3;
     .th
       .helper
           margin-left: .5rem;
@@ -333,11 +336,28 @@
         height: auto;
         line-height: 1.5;
       &.payload.name
+        $string: "";
         @for $i from 0 through 42
           &.depth-#{$i}
             padding-left: $i * 1rem + 0.75rem;
+            &:before
+              content: $string + ' ';
+              white-space: pre;
+          $string: $string + '-';
       &.payload.value
         word-break: break-word;
+      &.operations
+      &.name
+        font-size: 1.3rem;
+        color: #a50000;
+      &.type
+        color: #158c5d;
+      &.rule
+        color: #999;
+      &.value
+        color: #999;
+      &.desc
+        color: #1a78a5;
 .SortableTreeTable.editable
   .flex-row
     .td
@@ -347,8 +367,8 @@
         @for $i from 0 through 10
           &.depth-#{$i}
             padding-left: $i * 1rem;
-  input.editable, 
-  select.editable, 
+  input.editable,
+  select.editable,
   textarea.editable
     margin: 0;
     padding: .5rem .75rem;
