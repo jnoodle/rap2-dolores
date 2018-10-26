@@ -122,7 +122,7 @@ class InterfaceSummary extends Component {
             {itf.status}
           </li>
           {itf.description &&
-            <li><span className='label'>简介：</span>{itf.description}</li>
+            <li><span className='label'>简介：</span><p dangerouslySetInnerHTML={{__html: (itf.description || '').replace(/\n/g, '<br>')}}></p></li>
           }
           {editable &&
           <ul className='nav nav-tabs' role='tablist'>

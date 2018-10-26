@@ -76,6 +76,12 @@ const API = (props) => (
   </Bundle>
 )
 
+const Markdown = (props) => (
+  <Bundle load={cb => require.ensure([], require => cb(require('./components/export/Markdown')))}>
+    {CustomComponent => CustomComponent ? <CustomComponent {...props} /> : null}
+  </Bundle>
+)
+
 // import Utils from './components/utils/Utils'
 const Utils = (props) => (
   <Bundle load={cb => require.ensure([], require => cb(require('./components/utils/Utils')))}>
@@ -150,6 +156,12 @@ const Routes = ({ match, location }, { store }) => {
           <Route path='/api' children={() => (
             <Switch>
               <Route exact path='/api' component={API} />
+              <Route component={NoMatch} />
+            </Switch>
+          )} />
+          <Route path='/export' children={() => (
+            <Switch>
+              <Route exact path='/export/markdown' component={Markdown} />
               <Route component={NoMatch} />
             </Switch>
           )} />
