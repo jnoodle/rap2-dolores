@@ -1,6 +1,7 @@
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './assets/index.css'
+import './assets/github-markdown.css'
 import 'animate.css'
 
 import React from 'react'

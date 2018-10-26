@@ -113,7 +113,7 @@ class SortableTreeTableRow extends Component {
                 </div>
                 <div className='td payload desc'>
                   {!editable
-                    ? <span>{item.description}</span>
+                    ? <span dangerouslySetInnerHTML={{__html: (item.description || '').replace(/\n/g, '<br>')}}></span>
                     : <SmartTextarea value={item.description || ''} onChange={e => handleChangePropertyField(item.id, 'description', e.target.value)} rows='1' className='form-control editable' spellCheck='false' placeholder='' />
                   }
                 </div>

@@ -116,13 +116,13 @@ class RepositoryEditor extends Component {
             <a href={`${serve}/repository/get?id=${repository.id}`} target='_blank' className='api'><GoDatabase /> 数据</a>
             <a href={`${serve}/test/test.plugin.jquery.html?id=${repository.id}`} target='_blank' className='api'><GoJersey /> 测试</a>
             <span className='fake-link edit' onClick={e => this.setState({ exportPostman: true })}><GoLinkExternal /> 导出Postman Collection</span>
-            <a href="javascript:alert('正在开发呢！')"><GoFileText /> 导出Markdown</a>
+            <Link to={`/export/markdown?id=${repository.id}`}><GoFileText /> 导出Markdown</Link>
             <RModal when={this.state.exportPostman} onClose={e => this.setState({ exportPostman: false })} onResolve={e => this.setState({ exportPostman: false })}>
               <ExportPostmanForm title='导出到Postman' repoId={repository.id} />
             </RModal>
           </div>
           <RepositorySearcher repository={repository} />
-          <div className='desc'>{repository.description}</div>
+          <div className='desc' dangerouslySetInnerHTML={{__html: (repository.description || '').replace(/\n/g, '<br>')}}></div>
           <DuplicatedInterfacesWarning repository={repository} />
         </div>
         <div className='body'>
