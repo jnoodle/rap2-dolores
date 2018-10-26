@@ -214,6 +214,7 @@ ${modules}
 
     return (
       <section className='Markdown'>
+        <link rel="stylesheet" href="/github-markdown.css" />
         <div className='header'>
           <span className='title'>
             <GoRepo className='mr6 color-9'/>
