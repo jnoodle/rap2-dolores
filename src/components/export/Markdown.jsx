@@ -3,12 +3,20 @@ import moment from 'moment'
 import ReactDOM from 'react-dom'
 import { renderToString } from 'react-dom/server'
 import ReactMarkdown from 'react-markdown/with-html'
-import { PropTypes, connect, Link, replace, _ } from '../../family'
+import { PropTypes, connect, Link, replace, Mock, _ } from '../../family'
 import { serve } from '../../relatives/services/constant'
-import { RModal, Spin } from '../utils'
+import { RModal, Spin, Tree } from '../utils'
 import { fetchRepository } from '../../actions/repository'
 import { GoRepo, GoPencil, GoPlug, GoDatabase, GoJersey, GoLinkExternal, GoFileText } from 'react-icons/lib/go'
 import './Markdown.css'
+
+window.openMdhtml = function () {
+  let myWindow = window.open('/mdhtml.html', 'newWindow', 'width=' + window.screen.availWidth + ',height=' + window.screen.availHeight)
+
+  myWindow.onload = function () {
+    myWindow.document.getElementById('mainBody').innerHTML = document.getElementById('markdownHtml').innerHTML
+  }
+}
 
 // DONE 2.3 区分请求和响应作用域
 
@@ -97,14 +105,14 @@ class Markdown extends React.Component {
         }
 
         let requestProps = vi.properties.filter(d => d.scope === 'request')
-        this.arrayToTree(requestProps)
+        let treeRequestProps = this.arrayToTree(requestProps)
         requestProps.sort(sortProps)
+        let jsonRequestProps = Mock.mock(Tree.treeToJson(treeRequestProps))
 
         let responseProps = vi.properties.filter(d => d.scope === 'response')
-        this.arrayToTree(responseProps)
+        let treeResponseProps = this.arrayToTree(responseProps)
         responseProps.sort(sortProps)
-
-        console.log(responseProps)
+        let jsonResponseProps = Mock.mock(Tree.treeToJson(treeResponseProps))
 
         let request = requestProps.map(v => {
           let pre = '-'.repeat(v.depth || 0)
@@ -141,9 +149,17 @@ ${request}
 | :--- | :---: | :--- |
 ${response}
 
+请求示例：
+
+\`\`\`json
+${JSON.stringify(jsonRequestProps, null, 2)}
+\`\`\`
+
 响应示例：
 
-略
+\`\`\`json
+${JSON.stringify(jsonResponseProps, null, 2)}
+\`\`\`
 `
 
       })
@@ -159,6 +175,7 @@ ${interfaces}
 `
 
     })
+
     md = `# ${data.name}
 
 ## 目录
@@ -170,6 +187,8 @@ ${'<span id="header-1"></span>'}
 ## 1、文档概述
 
 ${(this.escapeHtml(data.description || '')).replace(/\n/g, '<br>')}
+
+（请求示例和响应示例根据接口规则生成，如果接口规则未填写或不正确，生成的示例可能不正确，请以接口字段的描述为准）
 
 ${modules}
 
@@ -201,13 +220,12 @@ ${modules}
             <Link
               to={`${ownerlink}`}>{repository.organization ? repository.organization.name : repository.owner.fullname}</Link>
             <span className='slash'> / </span>
-            <span>{repository.name}</span>
-            <small> 导出 Markdown</small>
+            <Link to={`/repository/editor?id=${repository.id}`}>{repository.name}</Link>
           </span>
         </div>
         <div className="row">
           <div className="col-md-6">
-            <h4>Markdown（可以复制到Markdown编辑器中自己调整）</h4>
+            <h4>Markdown <small>（可以复制到Markdown编辑器中自己调整）</small></h4>
             <br/>
             <div className="source">
             <pre>
@@ -216,10 +234,14 @@ ${modules}
             </div>
           </div>
           <div className="col-md-6">
-            <h4>HTML（可以复制到Word文档）</h4>
+            <h4>HTML <small>（可以复制到Word文档，或者<a href='javascript:openMdhtml(123)'>在新窗口查看</a>并保存为html(注意选择全部)或打印成pdf）</small></h4>
             <br/>
             <div className="target">
-              <div className="markdown-body">
+              <div className="markdown-body" id="markdownHtml">
+                <div className="logo" style={{textAlign: 'center', padding: '30px 0'}}>
+                  <img src="https://www.youxin.com/r/cms/www/default/images/tip_01a.png" alt="友信金服" width="200"/>
+                  <small></small>
+                </div>
                 <ReactMarkdown
                   source={markdown}
                   escapeHtml={false}
