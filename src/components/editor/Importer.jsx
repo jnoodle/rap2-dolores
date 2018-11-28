@@ -85,6 +85,12 @@ class Importer extends Component {
       }
     }
 
+    // fix null 类型导入保存出错
+    if (type === 'Null' || type === 'Undefined') {
+      type = 'String'
+      value = ''
+    }
+
     let property = Object.assign({
       name: schema.name,
       type,
