@@ -90,8 +90,8 @@ class Markdown extends React.Component {
 
         // 根据标识拆解成数组进行排序
         const sortProps = (a, b) => {
-          let arrA = a.priority2.split('.')
-          let arrB = b.priority2.split('.')
+          let arrA = typeof a.priority2 === 'string' ? a.priority2.split('.') : []
+          let arrB = typeof b.priority2 === 'string' ? b.priority2.split('.') : []
 
           for (let i = 0; i < Math.max(arrA.length, arrB.length); i++) {
             if (arrA[i] && arrB[i] && +arrA[i] !== +arrB[i]) {
@@ -214,7 +214,7 @@ ${modules}
 
     return (
       <section className='Markdown'>
-        <link rel="stylesheet" href="/github-markdown.css" />
+        <link rel="stylesheet" href="/github-markdown.css"/>
         <div className='header'>
           <span className='title'>
             <GoRepo className='mr6 color-9'/>
@@ -235,7 +235,8 @@ ${modules}
             </div>
           </div>
           <div className="col-md-6">
-            <h4>HTML <small>（可以复制到Word文档，或者<a href='javascript:openMdhtml(123)'>在新窗口查看</a>并保存为html(注意选择全部)或打印成pdf）</small></h4>
+            <h4>HTML <small>（可以复制到Word文档，或者<a href='javascript:openMdhtml(123)'>在新窗口查看</a>并保存为html(注意选择全部)或打印成pdf）
+            </small></h4>
             <br/>
             <div className="target">
               <div className="markdown-body" id="markdownHtml">
