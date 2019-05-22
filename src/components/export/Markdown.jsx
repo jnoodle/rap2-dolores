@@ -21,11 +21,10 @@ window.openMdhtml = function () {
 // DONE 2.3 区分请求和响应作用域
 
 class Markdown extends React.Component {
-
   static propTypes = {
     auth: PropTypes.object.isRequired,
     repository: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired
   }
 
   componentDidMount () {
@@ -76,17 +75,18 @@ class Markdown extends React.Component {
       .replace(/'/g, '&#039;')
   }
 
-  generateMarkdown (data) {
+  generateMarkdown (data, filterInterface = null) {
     let md = ''
     let modules = ''
     let menu = ''
 
     data.modules.forEach((vm, im) => {
-
       let interfaces = ''
       menu += `- [${im + 2}、${vm.name}](#header-${im + 2})\n`
 
       vm.interfaces.forEach((vi, ii) => {
+        // 过滤接口
+        if (filterInterface && filterInterface.length > 0 && !filterInterface.includes(vi.id + '')) return
 
         // 根据标识拆解成数组进行排序
         const sortProps = (a, b) => {
@@ -161,7 +161,6 @@ ${JSON.stringify(jsonRequestProps, null, 2)}
 ${JSON.stringify(jsonResponseProps, null, 2)}
 \`\`\`
 `
-
       })
 
       modules += `
@@ -173,7 +172,6 @@ ${(this.escapeHtml(vm.description) || '').replace(/\n/g, '<br>')}
 
 ${interfaces}
 `
-
     })
 
     md = `# ${data.name}
@@ -204,45 +202,48 @@ ${modules}
     if (!repository.fetching && !repository.data) return <div className='p100 fontsize-40 text-center'>404</div>
 
     repository = repository.data
-    if (!repository.id) return <Spin/>
+    if (!repository.id) return <Spin />
 
     let ownerlink = repository.organization
       ? `/organization/repository?organization=${repository.organization.id}`
       : `/repository/joined?user=${repository.owner.id}`
 
-    const markdown = this.generateMarkdown(repository)
+    let filterInterface = null
+    if (params.itf) filterInterface = params.itf.split(',')
+
+    const markdown = this.generateMarkdown(repository, filterInterface)
 
     return (
       <section className='Markdown'>
-        <link rel="stylesheet" href="/github-markdown.css"/>
+        <link rel='stylesheet' href='/github-markdown.css' />
         <div className='header'>
           <span className='title'>
-            <GoRepo className='mr6 color-9'/>
+            <GoRepo className='mr6 color-9' />
             <Link
               to={`${ownerlink}`}>{repository.organization ? repository.organization.name : repository.owner.fullname}</Link>
             <span className='slash'> / </span>
             <Link to={`/repository/editor?id=${repository.id}`}>{repository.name}</Link>
           </span>
         </div>
-        <div className="row">
-          <div className="col-md-6">
+        <div className='row'>
+          <div className='col-md-6'>
             <h4>Markdown <small>（可以复制到Markdown编辑器中自己调整）</small></h4>
-            <br/>
-            <div className="source">
-            <pre>
-              {markdown}
-            </pre>
+            <br />
+            <div className='source'>
+              <pre>
+                {markdown}
+              </pre>
             </div>
           </div>
-          <div className="col-md-6">
+          <div className='col-md-6'>
             <h4>HTML <small>（可以复制到Word文档，或者<a href='javascript:openMdhtml(123)'>在新窗口查看</a>并保存为html(注意选择全部)或打印成pdf）
             </small></h4>
-            <br/>
-            <div className="target">
-              <div className="markdown-body" id="markdownHtml">
-                <div className="logo" style={{textAlign: 'center', padding: '30px 0'}}>
-                  <img src="https://www.youxin.com/r/cms/www/default/images/tip_01a.png" alt="友信金服" width="200"/>
-                  <small></small>
+            <br />
+            <div className='target'>
+              <div className='markdown-body' id='markdownHtml'>
+                <div className='logo' style={{textAlign: 'center', padding: '30px 0'}}>
+                  <img src='https://www.youxin.com/r/cms/www/default/images/tip_01a.png' alt='友信金服' width='200' />
+                  <small />
                 </div>
                 <ReactMarkdown
                   source={markdown}
@@ -263,7 +264,7 @@ const mapStateToProps = (state) => ({
   repository: state.repository
 })
 const mapDispatchToProps = ({
-  onFetchRepository: fetchRepository,
+  onFetchRepository: fetchRepository
 })
 
 export default connect(
