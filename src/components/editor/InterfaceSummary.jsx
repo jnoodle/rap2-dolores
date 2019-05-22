@@ -100,6 +100,7 @@ class InterfaceSummary extends Component {
           <span className='title'>
             {itf.name}
           </span>
+          <Link to={`/export/markdown?id=${repository.id}&itf=${itf.id}`}>导出 Markdown</Link>
           {/* TODO 2.2 √模板接口、√数据接口、JSONSchema 接口 */}
           {/* TODO 2.2 权限控制，被别人锁定时不能编辑和删除 */}
           {/* TODO 2.2 这里的接口编辑和右侧的编辑容易引起歧义，很难受 */}
